@@ -1,22 +1,23 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
+  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
+  ForeignKey,
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Role } from 'src/roles/roles.model';
-import { UserRoles } from 'src/roles/user-roles.model';
+import { User } from 'src/users/users.model';
 
 interface PostCreationAttrs {
-  email: string;
-  password: string;
+  title: string;
+  body: string;
+  userId: number;
+  image: string;
 }
 
 @Table({ tableName: 'posts' })
 export class Post extends Model<Post, PostCreationAttrs> {
-  @ApiProperty({ example: '1', description: 'Unique id' })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -25,36 +26,25 @@ export class Post extends Model<Post, PostCreationAttrs> {
   })
   id: number;
 
-  @ApiProperty({ example: 'user@gmail.com', description: 'Email address' })
-  @Column({
-    type: DataType.STRING,
-    unique: true,
-    allowNull: false,
-  })
-  email: string;
-
-  @ApiProperty({ example: '12345', description: 'Password' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  password?: string;
+  title: string;
 
-  @ApiProperty({ example: 'true', description: 'Banned or not' })
-  @Column({
-    type: DataType.BOOLEAN,
-    defaultValue: false,
-  })
-  banned: boolean;
-
-  @ApiProperty({ example: 'Some reason', description: 'Ban reason' })
   @Column({
     type: DataType.STRING,
-    unique: true,
-    allowNull: true,
+    allowNull: false,
   })
-  banReason: string;
+  body: string;
 
-  @BelongsToMany(() => Role, () => UserRoles) // through table UserRoles
-  roles: Role[];
+  @Column({ type: DataType.STRING })
+  image: string;
+
+  @ForeignKey(() => User)
+  @Column({ type: DataType.INTEGER })
+  userId: number;
+
+  @BelongsTo(() => User)
+  author: User;
 }

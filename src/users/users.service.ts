@@ -9,7 +9,7 @@ import { User } from './users.model';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(User) private readonly userRepository: typeof User,
     private roleService: RolesService,
   ) {}
 

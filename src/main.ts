@@ -7,7 +7,7 @@ import { ValidationPipe } from './pipes/validation.pipe';
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('Nest REST API sequilize')
     .setDescription('Documentation REST API')

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FilesService } from 'src/files/files.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -24,5 +24,16 @@ export class PostsService {
   async getAllPosts() {
     const posts = await this.postRepository.findAll({ include: { all: true } });
     return posts;
+  }
+
+  async delete(id: number) {
+    const row = await this.postRepository.findOne({
+      where: { id },
+    });
+
+    if (row) {
+      return await row.destroy(); // deletes the row
+    }
+    throw new NotFoundException();
   }
 }

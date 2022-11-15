@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Request,
   UploadedFile,
@@ -20,7 +23,7 @@ export class PostsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
-  createPost(
+  async createPost(
     @Body() dto: CreatePostDto,
     @Request() req,
     @UploadedFile() image,
@@ -29,7 +32,12 @@ export class PostsController {
   }
 
   @Get()
-  getAll() {
+  async getAll() {
     return this.postsService.getAllPosts();
+  }
+
+  @Delete(':id')
+  async deletePost(@Param('id', ParseIntPipe) id: number) {
+    return this.postsService.delete(id);
   }
 }
